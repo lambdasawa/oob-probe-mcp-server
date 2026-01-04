@@ -6,13 +6,14 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/lambdasawa/oob-probe-mcp-server/internal/oob"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
 func main() {
-	sendDesktopNotification("ping")
+	oob.SendDesktopNotification("ping")
 
-	mgr := NewListenerManager()
+	mgr := oob.NewListenerManager()
 	defer mgr.CloseAll()
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
@@ -22,7 +23,7 @@ func main() {
 		mgr.CloseAll()
 	}()
 
-	if err := newMCPServer(mgr).Run(ctx, &mcp.StdioTransport{}); err != nil {
+	if err := oob.NewMCPServer(mgr).Run(ctx, &mcp.StdioTransport{}); err != nil {
 		panic(err)
 	}
 }

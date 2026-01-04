@@ -1,10 +1,11 @@
-package main
+package oob
 
 import (
 	"errors"
 	"fmt"
-	"golang.ngrok.com/ngrok"
 	"net"
+
+	"golang.ngrok.com/ngrok"
 )
 
 type TCPListener struct {
@@ -70,7 +71,7 @@ func (l *TCPListener) acceptLoop() {
 		}
 		l.conn = conn
 
-		sendDesktopNotification(fmt.Sprintf("New connection on port %d", l.backendPort))
+		SendDesktopNotification(fmt.Sprintf("New connection on port %d", l.backendPort))
 
 		l.readLoop()
 	}

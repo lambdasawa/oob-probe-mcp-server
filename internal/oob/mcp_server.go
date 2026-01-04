@@ -1,4 +1,4 @@
-package main
+package oob
 
 import (
 	"context"
@@ -116,7 +116,7 @@ func encodeData(data []byte, encoding string) (string, error) {
 	}
 }
 
-func newMCPServer(mgr *ListenerManager) *mcp.Server {
+func NewMCPServer(mgr *ListenerManager) *mcp.Server {
 	server := mcp.NewServer(&mcp.Implementation{
 		Name:    "oob-probe-mcp-server",
 		Title:   "OOB probe MCP server for reverse shell and SSRF testing",

@@ -1,4 +1,4 @@
-package main
+package oob
 
 import (
 	"os"
@@ -7,7 +7,7 @@ import (
 	"github.com/gen2brain/beeep"
 )
 
-func sendDesktopNotification(body string) {
+func SendDesktopNotification(body string) {
 	if !desktopNotificationsEnabled() {
 		return
 	}

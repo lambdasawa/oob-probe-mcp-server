@@ -1,9 +1,10 @@
-package main
+package oob
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"net"
+
+	"github.com/google/uuid"
 )
 
 type Port uint

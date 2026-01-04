@@ -1,4 +1,4 @@
-package main
+package oob
 
 import (
 	"bytes"
@@ -81,7 +81,7 @@ func (l *HTTPListener) RequestCount() int64 {
 
 func (l *HTTPListener) handle(w http.ResponseWriter, r *http.Request) {
 	atomic.AddInt64(&l.requestCount, 1)
-	sendDesktopNotification(fmt.Sprintf("New HTTP request on port %d", l.backendPort))
+	SendDesktopNotification(fmt.Sprintf("New HTTP request on port %d", l.backendPort))
 
 	body, truncated := readRequestBody(r)
 	entry := formatHTTPRequestLog(r, body, truncated)
