@@ -70,6 +70,10 @@ func (l *HTTPListener) StartNgrokTunnel() error {
 }
 
 func ngrokAuthtokenFromConfig() (string, error) {
+	if token := strings.TrimSpace(os.Getenv("NGROK_AUTHTOKEN")); token != "" {
+		return token, nil
+	}
+
 	configDir, err := os.UserConfigDir()
 	if err != nil {
 		return "", fmt.Errorf("failed to get user config dir: %v", err)
