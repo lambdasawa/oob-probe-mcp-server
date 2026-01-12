@@ -27,7 +27,11 @@ func (l *TCPListener) StartNgrokTunnel() error {
 		return fmt.Errorf("failed to parse backend URL: %v", err)
 	}
 
-	tunnelConfig := config.TCPEndpoint()
+	var opts []config.TCPEndpointOption
+	if remoteAddr := os.Getenv("OOB_PROBE_TCP_ADDRESS"); remoteAddr != "" {
+		opts = append(opts, config.WithRemoteAddr(remoteAddr))
+	}
+	tunnelConfig := config.TCPEndpoint(opts...)
 
 	token, err := ngrokAuthtokenFromConfig()
 	if err != nil {

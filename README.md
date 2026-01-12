@@ -56,13 +56,13 @@ Example `.mcp.json` entry:
 }
 ```
 
-## Desktop notifications
+## Environment Variables
 
-Desktop notifications are enabled by default. Disable them by setting:
-
-```
-OOB_PROBE_ENABLE_DESKTOP_NOTIFICATION=false
-```
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NGROK_AUTHTOKEN` | ngrok authentication token | Read from `~/.config/ngrok/ngrok.yml` |
+| `OOB_PROBE_TCP_ADDRESS` | ngrok remote address for TCP (e.g., `1.tcp.ngrok.io:12345`) | Dynamic |
+| `OOB_PROBE_ENABLE_DESKTOP_NOTIFICATION` | Enable desktop notifications | `true` |
 
 ## Intended use
 

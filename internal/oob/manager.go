@@ -52,31 +52,36 @@ func (m *ListenerManager) GetStatus() []map[string]any {
 	return items
 }
 
-func (m *ListenerManager) ListenTCP(port Port) (*TCPListener, error) {
-	if _, exists := m.tcpListeners[port]; exists {
-		return nil, fmt.Errorf("port %d already listening (tcp)", port)
+func (m *ListenerManager) ListenTCP() (*TCPListener, error) {
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return nil, fmt.Errorf("failed to listen: %v", err)
 	}
-	if _, exists := m.httpListeners[port]; exists {
-		return nil, fmt.Errorf("port %d already listening (http)", port)
+
+	actualPort := Port(ln.Addr().(*net.TCPAddr).Port)
+
+	if _, exists := m.tcpListeners[actualPort]; exists {
+		_ = ln.Close()
+		return nil, fmt.Errorf("port %d already listening (tcp)", actualPort)
+	}
+	if _, exists := m.httpListeners[actualPort]; exists {
+		_ = ln.Close()
+		return nil, fmt.Errorf("port %d already listening (http)", actualPort)
 	}
 
 	l := &TCPListener{
 		id:          uuid.New().String(),
-		backendPort: port,
+		backendPort: actualPort,
 		logStore:    new(LogStore),
+		ln:          ln,
 	}
-	m.tcpListeners[port] = l
+	m.tcpListeners[actualPort] = l
 
 	if err := l.StartNgrokTunnel(); err != nil {
 		_ = l.Close()
+		delete(m.tcpListeners, actualPort)
 		return nil, fmt.Errorf("failed to start ngrok tunnel: %v", err)
 	}
-
-	ln, err := net.Listen("tcp", fmt.Sprintf("%s:%d", "127.0.0.1", port))
-	if err != nil {
-		return nil, fmt.Errorf("failed to listen on %v %v", port, err)
-	}
-	l.ln = ln
 
 	go l.acceptLoop()
 

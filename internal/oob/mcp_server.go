@@ -8,9 +8,7 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
-type listenTCPArgs struct {
-	Port Port `json:"port" jsonschema:"tcp port to listen"`
-}
+type listenTCPArgs struct{}
 
 type listenTCPResult struct {
 	Port      Port   `json:"port" jsonschema:"tcp port"`
@@ -131,9 +129,9 @@ func NewMCPServer(mgr *ListenerManager) *mcp.Server {
 			return nil, result, nil
 		})
 
-	mcp.AddTool(server, &mcp.Tool{Name: "listen_tcp", Description: "[ReverseShell] Start listening on a TCP port."},
+	mcp.AddTool(server, &mcp.Tool{Name: "listen_tcp", Description: "[ReverseShell] Start listening on a TCP port. ngrok remote address can be configured via OOB_PROBE_TCP_ADDRESS env var."},
 		func(ctx context.Context, req *mcp.CallToolRequest, args listenTCPArgs) (*mcp.CallToolResult, any, error) {
-			l, err := mgr.ListenTCP(args.Port)
+			l, err := mgr.ListenTCP()
 			if err != nil {
 				return nil, nil, err
 			}
